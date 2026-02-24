@@ -216,30 +216,26 @@ export default function CTADesigner() {
                     </clipPath>
                   </defs>
                   <g clipPath="url(#bannerClip)">
-                    {Array.from({ length: 6 }).map((_, i) => {
-                      const spacing = config.stripeWidth * 2.2;
-                      const x = -300 + i * spacing;
-                      return (
-                        <g key={i} transform={`rotate(${config.stripeAngle}, 512, 150)`}>
-                          <rect
-                            x={x}
-                            y={-200}
-                            width={config.stripeWidth}
-                            height="700"
+                    {(() => {
+                      const skew = Math.tan((Math.abs(config.stripeAngle) * Math.PI) / 180);
+                      const w = config.stripeWidth;
+                      const spacing = w * 2.4;
+                      return Array.from({ length: 5 }).map((_, i) => {
+                        const baseX = -400 + i * spacing;
+                        const topLeft = baseX + 300 * skew;
+                        const topRight = topLeft + w;
+                        const bottomLeft = baseX;
+                        const bottomRight = baseX + w;
+                        return (
+                          <polygon
+                            key={i}
+                            points={`${topLeft},-10 ${topRight},-10 ${bottomRight},310 ${bottomLeft},310`}
                             fill="rgba(255,255,255,1)"
-                            opacity={config.stripeOpacity * 0.35}
+                            opacity={config.stripeOpacity * 0.3}
                           />
-                          <rect
-                            x={x + config.stripeWidth * 0.15}
-                            y={-200}
-                            width={config.stripeWidth * 0.08}
-                            height="700"
-                            fill="rgba(255,255,255,1)"
-                            opacity={config.stripeOpacity * 0.5}
-                          />
-                        </g>
-                      );
-                    })}
+                        );
+                      });
+                    })()}
                   </g>
                 </svg>
                 <h2
