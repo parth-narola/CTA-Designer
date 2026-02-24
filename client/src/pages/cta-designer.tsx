@@ -74,9 +74,9 @@ const defaultConfig: CTAConfig = {
   descriptionColor: "#000000",
   buttonBgColor: "#000000",
   buttonTextColor: "#ffffff",
-  headingSize: 36,
-  descriptionSize: 16,
-  buttonSize: 16,
+  headingSize: 56,
+  descriptionSize: 24,
+  buttonSize: 22,
   fontFamily: "'DM Sans', sans-serif",
   stripeAngle: -20,
   stripeWidth: 200,
@@ -94,7 +94,7 @@ export default function CTADesigner() {
     const updateScale = () => {
       if (wrapperRef.current) {
         const containerWidth = wrapperRef.current.clientWidth - 48;
-        const s = Math.min(1, containerWidth / 1024);
+        const s = Math.min(1, containerWidth / 2160);
         setScale(s);
       }
     };
@@ -123,7 +123,7 @@ export default function CTADesigner() {
       const exportFn = format === "png" ? toPng : toJpeg;
       const dataUrl = await exportFn(ctaRef.current, {
         quality: 1,
-        pixelRatio: 2,
+        pixelRatio: 1,
         cacheBust: true,
       });
       const link = document.createElement("a");
@@ -176,14 +176,14 @@ export default function CTADesigner() {
               <h2 className="text-sm font-medium text-muted-foreground uppercase tracking-wider">Preview</h2>
             </div>
             <div ref={wrapperRef} className="flex items-center justify-center bg-muted/30 rounded-lg p-6 border border-border/50">
-              <div style={{ width: `${1024 * scale}px`, height: `${300 * scale}px` }}>
+              <div style={{ width: `${2160 * scale}px`, height: `${619 * scale}px` }}>
               <div
                 ref={ctaRef}
                 style={{
                   transform: `scale(${scale})`,
                   transformOrigin: "top left",
-                  width: "1024px",
-                  height: "300px",
+                  width: "2160px",
+                  height: "619px",
                   backgroundColor: config.bgColor,
                   fontFamily: config.fontFamily,
                   borderRadius: `${config.borderRadius}px`,
@@ -193,7 +193,7 @@ export default function CTADesigner() {
                   flexDirection: "column",
                   alignItems: "center",
                   justifyContent: "center",
-                  padding: "40px 80px",
+                  padding: "80px 160px",
                   boxSizing: "border-box",
                 }}
                 data-testid="cta-preview"
@@ -207,29 +207,29 @@ export default function CTADesigner() {
                     height: "100%",
                     pointerEvents: "none",
                   }}
-                  viewBox="0 0 1024 300"
+                  viewBox="0 0 2160 619"
                   preserveAspectRatio="none"
                 >
                   <defs>
                     <clipPath id="bannerClip">
-                      <rect x="0" y="0" width="1024" height="300" />
+                      <rect x="0" y="0" width="2160" height="619" />
                     </clipPath>
                   </defs>
                   <g clipPath="url(#bannerClip)">
                     {(() => {
                       const skew = Math.tan((Math.abs(config.stripeAngle) * Math.PI) / 180);
-                      const w = config.stripeWidth;
+                      const w = config.stripeWidth * 2;
                       const spacing = w * 2.4;
-                      return Array.from({ length: 5 }).map((_, i) => {
-                        const baseX = -400 + i * spacing;
-                        const topLeft = baseX + 300 * skew;
+                      return Array.from({ length: 6 }).map((_, i) => {
+                        const baseX = -600 + i * spacing;
+                        const topLeft = baseX + 619 * skew;
                         const topRight = topLeft + w;
                         const bottomLeft = baseX;
                         const bottomRight = baseX + w;
                         return (
                           <polygon
                             key={i}
-                            points={`${topLeft},-10 ${topRight},-10 ${bottomRight},310 ${bottomLeft},310`}
+                            points={`${topLeft},-10 ${topRight},-10 ${bottomRight},629 ${bottomLeft},629`}
                             fill="rgba(255,255,255,1)"
                             opacity={config.stripeOpacity * 0.3}
                           />
@@ -416,8 +416,8 @@ export default function CTADesigner() {
                     </div>
                     <Slider
                       value={[config.headingSize]}
-                      min={20}
-                      max={56}
+                      min={28}
+                      max={80}
                       step={1}
                       onValueChange={([v]) => updateConfig({ headingSize: v })}
                       data-testid="slider-heading-size"
@@ -430,8 +430,8 @@ export default function CTADesigner() {
                     </div>
                     <Slider
                       value={[config.descriptionSize]}
-                      min={12}
-                      max={24}
+                      min={14}
+                      max={40}
                       step={1}
                       onValueChange={([v]) => updateConfig({ descriptionSize: v })}
                       data-testid="slider-description-size"
@@ -444,8 +444,8 @@ export default function CTADesigner() {
                     </div>
                     <Slider
                       value={[config.buttonSize]}
-                      min={12}
-                      max={22}
+                      min={14}
+                      max={36}
                       step={1}
                       onValueChange={([v]) => updateConfig({ buttonSize: v })}
                       data-testid="slider-button-size"
