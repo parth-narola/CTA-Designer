@@ -42,10 +42,10 @@ interface CTAConfig {
 }
 
 const colorPresets = [
-  { name: "Blue", bg: "#8CC3D5", stripe: "#78b3c6", heading: "#000000", desc: "#000000" },
-  { name: "Pink", bg: "#F7D8E9", stripe: "#e8c4d8", heading: "#000000", desc: "#000000" },
-  { name: "Yellow", bg: "#F9E7DB", stripe: "#e8d4c6", heading: "#000000", desc: "#000000" },
-  { name: "Green", bg: "#99D9CA", stripe: "#84c9b8", heading: "#000000", desc: "#000000" },
+  { name: "Blue", bg: "#8CC3D5", stripe: "#ffffff", heading: "#000000", desc: "#000000" },
+  { name: "Pink", bg: "#F7D8E9", stripe: "#ffffff", heading: "#000000", desc: "#000000" },
+  { name: "Yellow", bg: "#F9E7DB", stripe: "#ffffff", heading: "#000000", desc: "#000000" },
+  { name: "Green", bg: "#99D9CA", stripe: "#ffffff", heading: "#000000", desc: "#000000" },
 ];
 
 const fontOptions = [
@@ -68,8 +68,8 @@ const defaultConfig: CTAConfig = {
   description: "Build meaningful coverage strategies that reduce risk and improve release confidence.",
   buttonText: "Contact Us",
   bgColor: "#F7D8E9",
-  stripeColor: "#e8c4d8",
-  stripeOpacity: 0.4,
+  stripeColor: "#ffffff",
+  stripeOpacity: 0.5,
   headingColor: "#000000",
   descriptionColor: "#000000",
   buttonBgColor: "#000000",
@@ -78,8 +78,8 @@ const defaultConfig: CTAConfig = {
   descriptionSize: 16,
   buttonSize: 16,
   fontFamily: "'DM Sans', sans-serif",
-  stripeAngle: -15,
-  stripeWidth: 120,
+  stripeAngle: -20,
+  stripeWidth: 160,
   borderRadius: 0,
 };
 
@@ -210,21 +210,37 @@ export default function CTADesigner() {
                   viewBox="0 0 1024 300"
                   preserveAspectRatio="none"
                 >
-                  {Array.from({ length: 8 }).map((_, i) => {
-                    const x = -200 + i * config.stripeWidth * 1.8;
-                    return (
-                      <rect
-                        key={i}
-                        x={x}
-                        y={-50}
-                        width={config.stripeWidth}
-                        height="500"
-                        fill={config.stripeColor}
-                        opacity={config.stripeOpacity}
-                        transform={`rotate(${config.stripeAngle}, 512, 150)`}
-                      />
-                    );
-                  })}
+                  <defs>
+                    <clipPath id="bannerClip">
+                      <rect x="0" y="0" width="1024" height="300" />
+                    </clipPath>
+                  </defs>
+                  <g clipPath="url(#bannerClip)">
+                    {Array.from({ length: 6 }).map((_, i) => {
+                      const spacing = config.stripeWidth * 2.2;
+                      const x = -300 + i * spacing;
+                      return (
+                        <g key={i} transform={`rotate(${config.stripeAngle}, 512, 150)`}>
+                          <rect
+                            x={x}
+                            y={-200}
+                            width={config.stripeWidth}
+                            height="700"
+                            fill="rgba(255,255,255,1)"
+                            opacity={config.stripeOpacity * 0.35}
+                          />
+                          <rect
+                            x={x + config.stripeWidth * 0.15}
+                            y={-200}
+                            width={config.stripeWidth * 0.08}
+                            height="700"
+                            fill="rgba(255,255,255,1)"
+                            opacity={config.stripeOpacity * 0.5}
+                          />
+                        </g>
+                      );
+                    })}
+                  </g>
                 </svg>
                 <h2
                   style={{
