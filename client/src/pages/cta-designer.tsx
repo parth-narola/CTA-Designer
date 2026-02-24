@@ -79,7 +79,7 @@ const defaultConfig: CTAConfig = {
   buttonSize: 16,
   fontFamily: "'DM Sans', sans-serif",
   stripeAngle: -20,
-  stripeWidth: 160,
+  stripeWidth: 200,
   borderRadius: 0,
 };
 
@@ -243,7 +243,7 @@ export default function CTADesigner() {
                     color: config.headingColor,
                     fontSize: `${config.headingSize}px`,
                     fontWeight: 800,
-                    fontStyle: "italic",
+                    fontStyle: "normal",
                     textAlign: "center",
                     margin: "0 0 12px 0",
                     lineHeight: 1.2,
