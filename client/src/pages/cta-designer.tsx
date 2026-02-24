@@ -262,7 +262,7 @@ export default function CTADesigner() {
                     fontSize: `${config.descriptionSize}px`,
                     textAlign: "center",
                     margin: `0 0 ${config.buttonSpacing}px 0`,
-                    maxWidth: "600px",
+                    maxWidth: "70%",
                     lineHeight: 1.6,
                     position: "relative",
                     zIndex: 1,
