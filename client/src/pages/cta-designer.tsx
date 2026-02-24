@@ -121,12 +121,25 @@ export default function CTADesigner() {
     if (!ctaRef.current) return;
     setIsExporting(true);
     try {
+      const el = ctaRef.current;
+      const originalTransform = el.style.transform;
+      el.style.transform = "scale(1)";
+
       const exportFn = format === "png" ? toPng : toJpeg;
-      const dataUrl = await exportFn(ctaRef.current, {
+      const dataUrl = await exportFn(el, {
         quality: 1,
         pixelRatio: 1,
         cacheBust: true,
+        width: 2160,
+        height: 619,
+        style: {
+          transform: "scale(1)",
+          transformOrigin: "top left",
+        },
       });
+
+      el.style.transform = originalTransform;
+
       const link = document.createElement("a");
       link.download = `cta-banner.${format}`;
       link.href = dataUrl;
