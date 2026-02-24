@@ -3,7 +3,6 @@ import { toPng, toJpeg } from "html-to-image";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Slider } from "@/components/ui/slider";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Select,
@@ -39,6 +38,7 @@ interface CTAConfig {
   stripeAngle: number;
   stripeWidth: number;
   borderRadius: number;
+  buttonSpacing: number;
 }
 
 const colorPresets = [
@@ -81,6 +81,7 @@ const defaultConfig: CTAConfig = {
   stripeAngle: -20,
   stripeWidth: 200,
   borderRadius: 0,
+  buttonSpacing: 24,
 };
 
 export default function CTADesigner() {
@@ -260,7 +261,7 @@ export default function CTADesigner() {
                     color: config.descriptionColor,
                     fontSize: `${config.descriptionSize}px`,
                     textAlign: "center",
-                    margin: "0 0 24px 0",
+                    margin: `0 0 ${config.buttonSpacing}px 0`,
                     maxWidth: "600px",
                     lineHeight: 1.6,
                     position: "relative",
@@ -408,107 +409,39 @@ export default function CTADesigner() {
                   </div>
                 </TabsContent>
 
-                <TabsContent value="style" className="p-4 space-y-5 mt-0">
+                <TabsContent value="style" className="p-4 space-y-4 mt-0">
                   <div className="space-y-3">
-                    <div className="flex items-center justify-between">
-                      <Label className="text-xs font-medium text-muted-foreground">Heading Size</Label>
-                      <span className="text-xs text-muted-foreground tabular-nums">{config.headingSize}px</span>
+                    <Label className="text-xs font-medium text-muted-foreground">Text Sizes</Label>
+                    <div className="grid grid-cols-3 gap-3">
+                      <SizeInput label="Heading" value={config.headingSize} onChange={(v) => updateConfig({ headingSize: v })} suffix="px" testId="input-heading-size" />
+                      <SizeInput label="Description" value={config.descriptionSize} onChange={(v) => updateConfig({ descriptionSize: v })} suffix="px" testId="input-description-size" />
+                      <SizeInput label="Button" value={config.buttonSize} onChange={(v) => updateConfig({ buttonSize: v })} suffix="px" testId="input-button-size" />
                     </div>
-                    <Slider
-                      value={[config.headingSize]}
-                      min={28}
-                      max={80}
-                      step={1}
-                      onValueChange={([v]) => updateConfig({ headingSize: v })}
-                      data-testid="slider-heading-size"
-                    />
-                  </div>
-                  <div className="space-y-3">
-                    <div className="flex items-center justify-between">
-                      <Label className="text-xs font-medium text-muted-foreground">Description Size</Label>
-                      <span className="text-xs text-muted-foreground tabular-nums">{config.descriptionSize}px</span>
-                    </div>
-                    <Slider
-                      value={[config.descriptionSize]}
-                      min={14}
-                      max={40}
-                      step={1}
-                      onValueChange={([v]) => updateConfig({ descriptionSize: v })}
-                      data-testid="slider-description-size"
-                    />
-                  </div>
-                  <div className="space-y-3">
-                    <div className="flex items-center justify-between">
-                      <Label className="text-xs font-medium text-muted-foreground">Button Size</Label>
-                      <span className="text-xs text-muted-foreground tabular-nums">{config.buttonSize}px</span>
-                    </div>
-                    <Slider
-                      value={[config.buttonSize]}
-                      min={14}
-                      max={36}
-                      step={1}
-                      onValueChange={([v]) => updateConfig({ buttonSize: v })}
-                      data-testid="slider-button-size"
-                    />
                   </div>
 
                   <div className="h-px bg-border" />
 
                   <div className="space-y-3">
-                    <div className="flex items-center justify-between">
-                      <Label className="text-xs font-medium text-muted-foreground">Stripe Opacity</Label>
-                      <span className="text-xs text-muted-foreground tabular-nums">{Math.round(config.stripeOpacity * 100)}%</span>
-                    </div>
-                    <Slider
-                      value={[config.stripeOpacity]}
-                      min={0}
-                      max={1}
-                      step={0.05}
-                      onValueChange={([v]) => updateConfig({ stripeOpacity: v })}
-                      data-testid="slider-stripe-opacity"
-                    />
+                    <Label className="text-xs font-medium text-muted-foreground">Button Spacing</Label>
+                    <SizeInput label="Top/Bottom" value={config.buttonSpacing} onChange={(v) => updateConfig({ buttonSpacing: v })} suffix="px" testId="input-button-spacing" />
                   </div>
+
+                  <div className="h-px bg-border" />
+
                   <div className="space-y-3">
-                    <div className="flex items-center justify-between">
-                      <Label className="text-xs font-medium text-muted-foreground">Stripe Angle</Label>
-                      <span className="text-xs text-muted-foreground tabular-nums">{config.stripeAngle}°</span>
+                    <Label className="text-xs font-medium text-muted-foreground">Stripe Settings</Label>
+                    <div className="grid grid-cols-3 gap-3">
+                      <SizeInput label="Opacity %" value={Math.round(config.stripeOpacity * 100)} onChange={(v) => updateConfig({ stripeOpacity: Math.min(100, Math.max(0, v)) / 100 })} suffix="%" testId="input-stripe-opacity" />
+                      <SizeInput label="Angle" value={config.stripeAngle} onChange={(v) => updateConfig({ stripeAngle: v })} suffix="°" testId="input-stripe-angle" />
+                      <SizeInput label="Width" value={config.stripeWidth} onChange={(v) => updateConfig({ stripeWidth: v })} suffix="px" testId="input-stripe-width" />
                     </div>
-                    <Slider
-                      value={[config.stripeAngle]}
-                      min={-45}
-                      max={45}
-                      step={1}
-                      onValueChange={([v]) => updateConfig({ stripeAngle: v })}
-                      data-testid="slider-stripe-angle"
-                    />
                   </div>
+
+                  <div className="h-px bg-border" />
+
                   <div className="space-y-3">
-                    <div className="flex items-center justify-between">
-                      <Label className="text-xs font-medium text-muted-foreground">Stripe Width</Label>
-                      <span className="text-xs text-muted-foreground tabular-nums">{config.stripeWidth}px</span>
-                    </div>
-                    <Slider
-                      value={[config.stripeWidth]}
-                      min={40}
-                      max={200}
-                      step={5}
-                      onValueChange={([v]) => updateConfig({ stripeWidth: v })}
-                      data-testid="slider-stripe-width"
-                    />
-                  </div>
-                  <div className="space-y-3">
-                    <div className="flex items-center justify-between">
-                      <Label className="text-xs font-medium text-muted-foreground">Border Radius</Label>
-                      <span className="text-xs text-muted-foreground tabular-nums">{config.borderRadius}px</span>
-                    </div>
-                    <Slider
-                      value={[config.borderRadius]}
-                      min={0}
-                      max={24}
-                      step={1}
-                      onValueChange={([v]) => updateConfig({ borderRadius: v })}
-                      data-testid="slider-border-radius"
-                    />
+                    <Label className="text-xs font-medium text-muted-foreground">Border Radius</Label>
+                    <SizeInput label="Radius" value={config.borderRadius} onChange={(v) => updateConfig({ borderRadius: v })} suffix="px" testId="input-border-radius" />
                   </div>
                 </TabsContent>
               </Tabs>
@@ -550,6 +483,36 @@ function ColorPicker({
           className="h-8 text-xs font-mono flex-1"
           data-testid={`${testId}-input`}
         />
+      </div>
+    </div>
+  );
+}
+
+function SizeInput({
+  label,
+  value,
+  onChange,
+  suffix,
+  testId,
+}: {
+  label: string;
+  value: number;
+  onChange: (v: number) => void;
+  suffix: string;
+  testId: string;
+}) {
+  return (
+    <div className="space-y-1.5">
+      <Label className="text-[11px] text-muted-foreground">{label}</Label>
+      <div className="relative">
+        <Input
+          type="number"
+          value={value}
+          onChange={(e) => onChange(Number(e.target.value))}
+          className="h-8 text-xs font-mono pr-8"
+          data-testid={testId}
+        />
+        <span className="absolute right-2.5 top-1/2 -translate-y-1/2 text-[10px] text-muted-foreground pointer-events-none">{suffix}</span>
       </div>
     </div>
   );
