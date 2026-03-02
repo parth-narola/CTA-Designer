@@ -351,12 +351,12 @@ export default function CTADesigner() {
         alt=""
         style={{
           position: "absolute",
-          bottom: "40px",
-          right: "40px",
+          bottom: "0",
+          right: "0",
           width: "320px",
           height: "auto",
           pointerEvents: "none",
-          opacity: config.stripeOpacity * 0.6,
+          opacity: 1,
         }}
       />
 
