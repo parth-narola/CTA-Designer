@@ -19,6 +19,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Download, Image, Type, Palette, Settings2, ChevronDown, Upload, X } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
+import cornerAccentImg from "@assets/Vector_(1)_1772451456855.png";
 
 type LayoutStyle = "centered" | "split";
 
@@ -345,50 +346,19 @@ export default function CTADesigner() {
         )}
       </div>
 
-      <svg
+      <img
+        src={cornerAccentImg}
+        alt=""
         style={{
           position: "absolute",
-          top: 0,
-          left: 0,
-          width: "100%",
-          height: "100%",
+          bottom: "40px",
+          right: "40px",
+          width: "320px",
+          height: "auto",
           pointerEvents: "none",
+          opacity: config.stripeOpacity * 0.6,
         }}
-        viewBox="0 0 2160 619"
-        preserveAspectRatio="none"
-      >
-        <polygon
-          points="1750,560 1920,370 2120,370 1950,560"
-          fill="rgba(255,255,255,1)"
-          opacity={config.stripeOpacity * 0.6}
-        />
-        <polygon
-          points="1850,619 2020,430 2160,430 2050,619"
-          fill="rgba(255,255,255,1)"
-          opacity={config.stripeOpacity * 0.6}
-        />
-        <polygon
-          points="1950,619 2120,430 2160,430 2160,560"
-          fill="none"
-          stroke="rgba(255,255,255,1)"
-          strokeWidth="2"
-          opacity={config.stripeOpacity * 0.4}
-        />
-        <polygon
-          points="2020,619 2160,470 2160,530 2080,619"
-          fill="none"
-          stroke="rgba(255,255,255,1)"
-          strokeWidth="2"
-          opacity={config.stripeOpacity * 0.4}
-        />
-        <polygon
-          points="2060,350 2130,260 2160,260 2160,350"
-          fill="none"
-          stroke="rgba(255,255,255,1)"
-          strokeWidth="2"
-          opacity={config.stripeOpacity * 0.3}
-        />
-      </svg>
+      />
 
       <div
         style={{
