@@ -17,10 +17,13 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Download, Image, Type, Palette, Settings2, ChevronDown } from "lucide-react";
+import { Download, Image, Type, Palette, Settings2, ChevronDown, Upload, X } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
 
+type LayoutStyle = "centered" | "split";
+
 interface CTAConfig {
+  layoutStyle: LayoutStyle;
   heading: string;
   description: string;
   buttonText: string;
@@ -39,6 +42,7 @@ interface CTAConfig {
   stripeWidth: number;
   borderRadius: number;
   buttonSpacing: number;
+  uploadedImage: string | null;
 }
 
 const colorPresets = [
@@ -46,6 +50,13 @@ const colorPresets = [
   { name: "Pink", bg: "#F7D8E9", stripe: "#ffffff", heading: "#000000", desc: "#000000" },
   { name: "Yellow", bg: "#F9E7DB", stripe: "#ffffff", heading: "#000000", desc: "#000000" },
   { name: "Green", bg: "#99D9CA", stripe: "#ffffff", heading: "#000000", desc: "#000000" },
+];
+
+const splitColorPresets = [
+  { name: "Mint", bg: "#D5E8E0", stripe: "#ffffff", heading: "#000000", desc: "#000000" },
+  { name: "Lavender", bg: "#DDD9E8", stripe: "#ffffff", heading: "#000000", desc: "#000000" },
+  { name: "Ice Blue", bg: "#D4DEE8", stripe: "#ffffff", heading: "#000000", desc: "#000000" },
+  { name: "Cream", bg: "#E8E4D5", stripe: "#ffffff", heading: "#000000", desc: "#000000" },
 ];
 
 const fontOptions = [
@@ -64,6 +75,7 @@ const fontOptions = [
 ];
 
 const defaultConfig: CTAConfig = {
+  layoutStyle: "centered",
   heading: "Improve Test Coverage Without Chasing Numbers",
   description: "Build meaningful coverage strategies that reduce risk and improve release confidence.",
   buttonText: "Contact Us",
@@ -82,6 +94,7 @@ const defaultConfig: CTAConfig = {
   stripeWidth: 200,
   borderRadius: 0,
   buttonSpacing: 24,
+  uploadedImage: null,
 };
 
 export default function CTADesigner() {
@@ -89,6 +102,7 @@ export default function CTADesigner() {
   const [isExporting, setIsExporting] = useState(false);
   const ctaRef = useRef<HTMLDivElement>(null);
   const wrapperRef = useRef<HTMLDivElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const [scale, setScale] = useState(1);
 
   useEffect(() => {
@@ -115,6 +129,47 @@ export default function CTADesigner() {
       headingColor: preset.heading,
       descriptionColor: preset.desc,
     });
+  }, [updateConfig]);
+
+  const handleImageUpload = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      updateConfig({ uploadedImage: ev.target?.result as string });
+    };
+    reader.readAsDataURL(file);
+  }, [updateConfig]);
+
+  const removeImage = useCallback(() => {
+    updateConfig({ uploadedImage: null });
+    if (fileInputRef.current) fileInputRef.current.value = "";
+  }, [updateConfig]);
+
+  const switchLayout = useCallback((style: LayoutStyle) => {
+    if (style === "split") {
+      updateConfig({
+        layoutStyle: "split",
+        bgColor: "#D5E8E0",
+        heading: "Ready to Upgrade Your QA Process?",
+        description: "Discover how Alphabin helps teams ship faster with smarter test insights.",
+        headingSize: 52,
+        descriptionSize: 24,
+        buttonSize: 22,
+        buttonSpacing: 32,
+      });
+    } else {
+      updateConfig({
+        layoutStyle: "centered",
+        bgColor: "#F7D8E9",
+        heading: "Improve Test Coverage Without Chasing Numbers",
+        description: "Build meaningful coverage strategies that reduce risk and improve release confidence.",
+        headingSize: 56,
+        descriptionSize: 24,
+        buttonSize: 22,
+        buttonSpacing: 24,
+      });
+    }
   }, [updateConfig]);
 
   const exportImage = useCallback(async (format: "png" | "jpg") => {
@@ -150,6 +205,243 @@ export default function CTADesigner() {
       setIsExporting(false);
     }
   }, []);
+
+  const renderCenteredLayout = () => (
+    <>
+      <svg
+        style={{
+          position: "absolute",
+          top: 0,
+          left: 0,
+          width: "100%",
+          height: "100%",
+          pointerEvents: "none",
+        }}
+        viewBox="0 0 2160 619"
+        preserveAspectRatio="none"
+      >
+        <defs>
+          <clipPath id="bannerClip">
+            <rect x="0" y="0" width="2160" height="619" />
+          </clipPath>
+        </defs>
+        <g clipPath="url(#bannerClip)">
+          {(() => {
+            const skew = Math.tan((Math.abs(config.stripeAngle) * Math.PI) / 180);
+            const w = config.stripeWidth * 2;
+            const spacing = w * 2.4;
+            return Array.from({ length: 6 }).map((_, i) => {
+              const baseX = -600 + i * spacing;
+              const topLeft = baseX + 619 * skew;
+              const topRight = topLeft + w;
+              const bottomLeft = baseX;
+              const bottomRight = baseX + w;
+              return (
+                <polygon
+                  key={i}
+                  points={`${topLeft},-10 ${topRight},-10 ${bottomRight},629 ${bottomLeft},629`}
+                  fill="rgba(255,255,255,1)"
+                  opacity={config.stripeOpacity * 0.3}
+                />
+              );
+            });
+          })()}
+        </g>
+      </svg>
+      <h2
+        style={{
+          color: config.headingColor,
+          fontSize: `${config.headingSize}px`,
+          fontWeight: 800,
+          fontStyle: "normal",
+          textAlign: "center",
+          margin: "0 0 12px 0",
+          lineHeight: 1.2,
+          position: "relative",
+          zIndex: 1,
+          letterSpacing: "-0.02em",
+        }}
+        data-testid="text-cta-heading"
+      >
+        {config.heading}
+      </h2>
+      <p
+        style={{
+          color: config.descriptionColor,
+          fontSize: `${config.descriptionSize}px`,
+          textAlign: "center",
+          margin: `0 0 ${config.buttonSpacing}px 0`,
+          maxWidth: "85%",
+          lineHeight: 1.6,
+          position: "relative",
+          zIndex: 1,
+        }}
+        data-testid="text-cta-description"
+      >
+        {config.description}
+      </p>
+      <button
+        style={{
+          backgroundColor: config.buttonBgColor,
+          color: config.buttonTextColor,
+          fontSize: `${config.buttonSize}px`,
+          fontWeight: 500,
+          padding: "12px 32px",
+          border: "none",
+          cursor: "pointer",
+          position: "relative",
+          zIndex: 1,
+          fontFamily: config.fontFamily,
+          letterSpacing: "0.01em",
+          borderRadius: config.borderRadius > 0 ? `${Math.min(config.borderRadius, 8)}px` : "0px",
+        }}
+        data-testid="button-cta-action"
+      >
+        {config.buttonText}
+      </button>
+    </>
+  );
+
+  const renderSplitLayout = () => (
+    <>
+      <div
+        style={{
+          position: "absolute",
+          left: 0,
+          top: 0,
+          width: "42%",
+          height: "100%",
+          overflow: "hidden",
+        }}
+      >
+        {config.uploadedImage ? (
+          <img
+            src={config.uploadedImage}
+            alt="CTA"
+            style={{
+              width: "100%",
+              height: "100%",
+              objectFit: "cover",
+              objectPosition: "center top",
+              borderBottomRightRadius: "120px",
+            }}
+          />
+        ) : (
+          <div
+            style={{
+              width: "100%",
+              height: "100%",
+              backgroundColor: "rgba(0,0,0,0.08)",
+              borderBottomRightRadius: "120px",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              flexDirection: "column",
+              gap: "12px",
+            }}
+          >
+            <Upload style={{ width: "48px", height: "48px", color: "rgba(0,0,0,0.25)" }} />
+            <span style={{ color: "rgba(0,0,0,0.35)", fontSize: "20px", fontFamily: config.fontFamily }}>Upload Image</span>
+          </div>
+        )}
+      </div>
+
+      <svg
+        style={{
+          position: "absolute",
+          top: 0,
+          left: 0,
+          width: "100%",
+          height: "100%",
+          pointerEvents: "none",
+        }}
+        viewBox="0 0 2160 619"
+        preserveAspectRatio="none"
+      >
+        <polygon
+          points="1920,400 2060,340 2160,619 2020,619"
+          fill="rgba(255,255,255,1)"
+          opacity={config.stripeOpacity * 0.4}
+        />
+        <polygon
+          points="2000,350 2100,310 2160,480 2080,520"
+          fill="rgba(255,255,255,1)"
+          opacity={config.stripeOpacity * 0.25}
+        />
+        <polygon
+          points="2060,200 2120,175 2160,300 2100,325"
+          fill="rgba(255,255,255,1)"
+          opacity={config.stripeOpacity * 0.2}
+        />
+      </svg>
+
+      <div
+        style={{
+          position: "absolute",
+          right: 0,
+          top: 0,
+          width: "55%",
+          height: "100%",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          padding: "60px 120px 60px 60px",
+          boxSizing: "border-box",
+          zIndex: 1,
+        }}
+      >
+        <h2
+          style={{
+            color: config.headingColor,
+            fontSize: `${config.headingSize}px`,
+            fontWeight: 800,
+            fontStyle: "normal",
+            textAlign: "left",
+            margin: "0 0 16px 0",
+            lineHeight: 1.2,
+            letterSpacing: "-0.02em",
+          }}
+          data-testid="text-cta-heading"
+        >
+          {config.heading}
+        </h2>
+        <p
+          style={{
+            color: config.descriptionColor,
+            fontSize: `${config.descriptionSize}px`,
+            textAlign: "left",
+            margin: `0 0 ${config.buttonSpacing}px 0`,
+            maxWidth: "90%",
+            lineHeight: 1.6,
+          }}
+          data-testid="text-cta-description"
+        >
+          {config.description}
+        </p>
+        <div>
+          <button
+            style={{
+              backgroundColor: config.buttonBgColor,
+              color: config.buttonTextColor,
+              fontSize: `${config.buttonSize}px`,
+              fontWeight: 500,
+              padding: "14px 40px",
+              border: "none",
+              cursor: "pointer",
+              fontFamily: config.fontFamily,
+              letterSpacing: "0.01em",
+              borderRadius: config.borderRadius > 0 ? `${Math.min(config.borderRadius, 8)}px` : "0px",
+            }}
+            data-testid="button-cta-action"
+          >
+            {config.buttonText}
+          </button>
+        </div>
+      </div>
+    </>
+  );
+
+  const activePresets = config.layoutStyle === "split" ? splitColorPresets : colorPresets;
 
   return (
     <div className="min-h-screen bg-background" data-testid="cta-designer-page">
@@ -205,104 +497,14 @@ export default function CTADesigner() {
                   overflow: "hidden",
                   display: "flex",
                   flexDirection: "column",
-                  alignItems: "center",
+                  alignItems: config.layoutStyle === "centered" ? "center" : "flex-start",
                   justifyContent: "center",
-                  padding: "80px 160px",
+                  padding: config.layoutStyle === "centered" ? "80px 160px" : "0",
                   boxSizing: "border-box",
                 }}
                 data-testid="cta-preview"
               >
-                <svg
-                  style={{
-                    position: "absolute",
-                    top: 0,
-                    left: 0,
-                    width: "100%",
-                    height: "100%",
-                    pointerEvents: "none",
-                  }}
-                  viewBox="0 0 2160 619"
-                  preserveAspectRatio="none"
-                >
-                  <defs>
-                    <clipPath id="bannerClip">
-                      <rect x="0" y="0" width="2160" height="619" />
-                    </clipPath>
-                  </defs>
-                  <g clipPath="url(#bannerClip)">
-                    {(() => {
-                      const skew = Math.tan((Math.abs(config.stripeAngle) * Math.PI) / 180);
-                      const w = config.stripeWidth * 2;
-                      const spacing = w * 2.4;
-                      return Array.from({ length: 6 }).map((_, i) => {
-                        const baseX = -600 + i * spacing;
-                        const topLeft = baseX + 619 * skew;
-                        const topRight = topLeft + w;
-                        const bottomLeft = baseX;
-                        const bottomRight = baseX + w;
-                        return (
-                          <polygon
-                            key={i}
-                            points={`${topLeft},-10 ${topRight},-10 ${bottomRight},629 ${bottomLeft},629`}
-                            fill="rgba(255,255,255,1)"
-                            opacity={config.stripeOpacity * 0.3}
-                          />
-                        );
-                      });
-                    })()}
-                  </g>
-                </svg>
-                <h2
-                  style={{
-                    color: config.headingColor,
-                    fontSize: `${config.headingSize}px`,
-                    fontWeight: 800,
-                    fontStyle: "normal",
-                    textAlign: "center",
-                    margin: "0 0 12px 0",
-                    lineHeight: 1.2,
-                    position: "relative",
-                    zIndex: 1,
-                    letterSpacing: "-0.02em",
-                  }}
-                  data-testid="text-cta-heading"
-                >
-                  {config.heading}
-                </h2>
-                <p
-                  style={{
-                    color: config.descriptionColor,
-                    fontSize: `${config.descriptionSize}px`,
-                    textAlign: "center",
-                    margin: `0 0 ${config.buttonSpacing}px 0`,
-                    maxWidth: "85%",
-                    lineHeight: 1.6,
-                    position: "relative",
-                    zIndex: 1,
-                  }}
-                  data-testid="text-cta-description"
-                >
-                  {config.description}
-                </p>
-                <button
-                  style={{
-                    backgroundColor: config.buttonBgColor,
-                    color: config.buttonTextColor,
-                    fontSize: `${config.buttonSize}px`,
-                    fontWeight: 500,
-                    padding: "12px 32px",
-                    border: "none",
-                    cursor: "pointer",
-                    position: "relative",
-                    zIndex: 1,
-                    fontFamily: config.fontFamily,
-                    letterSpacing: "0.01em",
-                    borderRadius: config.borderRadius > 0 ? `${Math.min(config.borderRadius, 8)}px` : "0px",
-                  }}
-                  data-testid="button-cta-action"
-                >
-                  {config.buttonText}
-                </button>
+                {config.layoutStyle === "centered" ? renderCenteredLayout() : renderSplitLayout()}
               </div>
               </div>
             </div>
@@ -330,6 +532,93 @@ export default function CTADesigner() {
                 </TabsList>
 
                 <TabsContent value="content" className="p-4 space-y-5 mt-0">
+                  <div className="space-y-2">
+                    <Label className="text-xs font-medium text-muted-foreground">Layout Style</Label>
+                    <div className="grid grid-cols-2 gap-2">
+                      <button
+                        onClick={() => switchLayout("centered")}
+                        className={`flex flex-col items-center gap-1.5 p-3 rounded-md border-2 transition-all text-xs ${
+                          config.layoutStyle === "centered"
+                            ? "border-foreground bg-muted/50"
+                            : "border-border hover:border-muted-foreground/50"
+                        }`}
+                        data-testid="layout-centered"
+                      >
+                        <div className="w-full h-10 rounded-sm bg-muted flex items-center justify-center">
+                          <div className="flex flex-col items-center gap-0.5">
+                            <div className="w-8 h-1 bg-foreground/40 rounded-full" />
+                            <div className="w-5 h-0.5 bg-foreground/25 rounded-full" />
+                            <div className="w-4 h-1.5 bg-foreground/30 rounded-sm mt-0.5" />
+                          </div>
+                        </div>
+                        <span className="font-medium">Centered</span>
+                      </button>
+                      <button
+                        onClick={() => switchLayout("split")}
+                        className={`flex flex-col items-center gap-1.5 p-3 rounded-md border-2 transition-all text-xs ${
+                          config.layoutStyle === "split"
+                            ? "border-foreground bg-muted/50"
+                            : "border-border hover:border-muted-foreground/50"
+                        }`}
+                        data-testid="layout-split"
+                      >
+                        <div className="w-full h-10 rounded-sm bg-muted flex">
+                          <div className="w-[40%] h-full bg-foreground/15 rounded-l-sm" />
+                          <div className="flex-1 flex flex-col justify-center items-start pl-2 gap-0.5">
+                            <div className="w-6 h-1 bg-foreground/40 rounded-full" />
+                            <div className="w-4 h-0.5 bg-foreground/25 rounded-full" />
+                            <div className="w-3 h-1.5 bg-foreground/30 rounded-sm mt-0.5" />
+                          </div>
+                        </div>
+                        <span className="font-medium">Split Image</span>
+                      </button>
+                    </div>
+                  </div>
+
+                  <div className="h-px bg-border" />
+
+                  {config.layoutStyle === "split" && (
+                    <>
+                      <div className="space-y-2">
+                        <Label className="text-xs font-medium text-muted-foreground">Image</Label>
+                        <input
+                          ref={fileInputRef}
+                          type="file"
+                          accept="image/*"
+                          onChange={handleImageUpload}
+                          className="hidden"
+                          data-testid="input-image-upload"
+                        />
+                        {config.uploadedImage ? (
+                          <div className="relative group">
+                            <img
+                              src={config.uploadedImage}
+                              alt="Uploaded"
+                              className="w-full h-24 object-cover rounded-md border border-border"
+                            />
+                            <button
+                              onClick={removeImage}
+                              className="absolute top-1.5 right-1.5 w-6 h-6 rounded-full bg-background/80 border border-border flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+                              data-testid="button-remove-image"
+                            >
+                              <X className="w-3.5 h-3.5" />
+                            </button>
+                          </div>
+                        ) : (
+                          <button
+                            onClick={() => fileInputRef.current?.click()}
+                            className="w-full h-20 rounded-md border-2 border-dashed border-border hover:border-muted-foreground/50 flex flex-col items-center justify-center gap-1.5 transition-colors"
+                            data-testid="button-upload-image"
+                          >
+                            <Upload className="w-4 h-4 text-muted-foreground" />
+                            <span className="text-xs text-muted-foreground">Click to upload</span>
+                          </button>
+                        )}
+                      </div>
+                      <div className="h-px bg-border" />
+                    </>
+                  )}
+
                   <div className="space-y-2">
                     <Label htmlFor="heading" className="text-xs font-medium text-muted-foreground">Heading</Label>
                     <Textarea
@@ -386,7 +675,7 @@ export default function CTADesigner() {
                   <div className="space-y-3">
                     <Label className="text-xs font-medium text-muted-foreground">Color Presets</Label>
                     <div className="grid grid-cols-5 gap-2">
-                      {colorPresets.map((preset) => (
+                      {activePresets.map((preset) => (
                         <button
                           key={preset.name}
                           onClick={() => applyPreset(preset)}
@@ -445,8 +734,12 @@ export default function CTADesigner() {
                     <Label className="text-xs font-medium text-muted-foreground">Stripe Settings</Label>
                     <div className="grid grid-cols-3 gap-3">
                       <SizeInput label="Opacity %" value={Math.round(config.stripeOpacity * 100)} onChange={(v) => updateConfig({ stripeOpacity: Math.min(100, Math.max(0, v)) / 100 })} suffix="%" testId="input-stripe-opacity" />
-                      <SizeInput label="Angle" value={config.stripeAngle} onChange={(v) => updateConfig({ stripeAngle: v })} suffix="°" testId="input-stripe-angle" />
-                      <SizeInput label="Width" value={config.stripeWidth} onChange={(v) => updateConfig({ stripeWidth: v })} suffix="px" testId="input-stripe-width" />
+                      {config.layoutStyle === "centered" && (
+                        <>
+                          <SizeInput label="Angle" value={config.stripeAngle} onChange={(v) => updateConfig({ stripeAngle: v })} suffix="°" testId="input-stripe-angle" />
+                          <SizeInput label="Width" value={config.stripeWidth} onChange={(v) => updateConfig({ stripeWidth: v })} suffix="px" testId="input-stripe-width" />
+                        </>
+                      )}
                     </div>
                   </div>
 
