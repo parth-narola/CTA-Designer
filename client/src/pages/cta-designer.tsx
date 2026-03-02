@@ -575,57 +575,57 @@ export default function CTADesigner() {
 
   const renderDarkSplitLayout = () => (
     <>
-      <div
-        style={{
-          position: "absolute",
-          left: 0,
-          top: 0,
-          width: "45%",
-          height: "100%",
-          overflow: "hidden",
-        }}
-      >
-        {config.uploadedImage ? (
-          <>
-            <img
-              src={config.uploadedImage}
-              alt="CTA"
-              style={{
-                width: "100%",
-                height: "100%",
-                objectFit: "cover",
-                objectPosition: "center center",
-              }}
-            />
-            <div
-              style={{
-                position: "absolute",
-                top: 0,
-                right: 0,
-                width: "40%",
-                height: "100%",
-                background: `linear-gradient(to right, transparent, ${config.bgColor})`,
-              }}
-            />
-          </>
-        ) : (
-          <div
+      {config.uploadedImage ? (
+        <div
+          style={{
+            position: "absolute",
+            left: 0,
+            top: 0,
+            width: "50%",
+            height: "100%",
+          }}
+        >
+          <img
+            src={config.uploadedImage}
+            alt="CTA"
             style={{
               width: "100%",
               height: "100%",
-              backgroundColor: "rgba(255,255,255,0.08)",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              flexDirection: "column",
-              gap: "12px",
+              objectFit: "cover",
+              objectPosition: "center center",
             }}
-          >
-            <Upload style={{ width: "48px", height: "48px", color: "rgba(255,255,255,0.3)" }} />
-            <span style={{ color: "rgba(255,255,255,0.4)", fontSize: "20px", fontFamily: config.fontFamily }}>Upload Image</span>
-          </div>
-        )}
-      </div>
+          />
+          <div
+            style={{
+              position: "absolute",
+              top: 0,
+              right: "-1px",
+              width: "60%",
+              height: "100%",
+              background: `linear-gradient(to right, transparent 0%, ${config.bgColor} 100%)`,
+            }}
+          />
+        </div>
+      ) : (
+        <div
+          style={{
+            position: "absolute",
+            left: 0,
+            top: 0,
+            width: "45%",
+            height: "100%",
+            backgroundColor: "rgba(255,255,255,0.08)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            flexDirection: "column",
+            gap: "12px",
+          }}
+        >
+          <Upload style={{ width: "48px", height: "48px", color: "rgba(255,255,255,0.3)" }} />
+          <span style={{ color: "rgba(255,255,255,0.4)", fontSize: "20px", fontFamily: config.fontFamily }}>Upload Image</span>
+        </div>
+      )}
 
       <img
         src={cornerAccentImg}
