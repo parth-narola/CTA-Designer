@@ -504,7 +504,7 @@ export default function CTADesigner() {
           left: 0,
           width: "100%",
           height: "100%",
-          backgroundColor: config.bgColor,
+          background: `linear-gradient(to right, ${config.bgColor} 0%, ${config.bgColor}ee 35%, ${config.bgColor}aa 60%, ${config.bgColor}66 85%, ${config.bgColor}33 100%)`,
           opacity: config.overlayOpacity,
         }}
       />
@@ -692,7 +692,7 @@ export default function CTADesigner() {
               fontSize: `${config.buttonSize}px`,
               fontWeight: 500,
               padding: "14px 40px",
-              border: "none",
+              border: `2px solid ${config.buttonBgColor}`,
               cursor: "pointer",
               fontFamily: config.fontFamily,
               letterSpacing: "0.01em",
