@@ -482,43 +482,71 @@ export default function CTADesigner() {
 
   const renderBackgroundLayout = () => (
     <>
-      {config.uploadedImage && (
-        <img
-          src={config.uploadedImage}
-          alt="CTA Background"
+      {config.uploadedImage ? (
+        <div
           style={{
             position: "absolute",
-            top: 0,
             left: 0,
-            width: "100%",
+            top: 0,
+            width: "50%",
             height: "100%",
-            objectFit: "cover",
-            objectPosition: "center center",
           }}
-        />
+        >
+          <img
+            src={config.uploadedImage}
+            alt="CTA"
+            style={{
+              width: "100%",
+              height: "100%",
+              objectFit: "cover",
+              objectPosition: "center center",
+            }}
+          />
+          <div
+            style={{
+              position: "absolute",
+              top: 0,
+              right: "-1px",
+              width: "60%",
+              height: "100%",
+              background: `linear-gradient(to right, transparent 0%, ${config.bgColor} 100%)`,
+            }}
+          />
+        </div>
+      ) : (
+        <div
+          style={{
+            position: "absolute",
+            left: 0,
+            top: 0,
+            width: "45%",
+            height: "100%",
+            backgroundColor: "rgba(0,0,0,0.05)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            flexDirection: "column",
+            gap: "12px",
+          }}
+        >
+          <Upload style={{ width: "48px", height: "48px", color: "rgba(0,0,0,0.2)" }} />
+          <span style={{ color: "rgba(0,0,0,0.3)", fontSize: "20px", fontFamily: config.fontFamily }}>Upload Image</span>
+        </div>
       )}
+
       <div
         style={{
           position: "absolute",
+          right: 0,
           top: 0,
-          left: 0,
-          width: "100%",
-          height: "100%",
-          background: `linear-gradient(to right, ${config.bgColor} 0%, ${config.bgColor}ee 35%, ${config.bgColor}aa 60%, ${config.bgColor}66 85%, ${config.bgColor}33 100%)`,
-          opacity: config.overlayOpacity,
-        }}
-      />
-      <div
-        style={{
-          position: "relative",
-          zIndex: 1,
-          width: "100%",
+          width: "55%",
           height: "100%",
           display: "flex",
           flexDirection: "column",
           justifyContent: "center",
-          padding: "60px 160px",
+          padding: "60px 120px 60px 80px",
           boxSizing: "border-box",
+          zIndex: 1,
         }}
       >
         <h2
@@ -531,7 +559,6 @@ export default function CTADesigner() {
             margin: "0 0 16px 0",
             lineHeight: 1.2,
             letterSpacing: "-0.02em",
-            maxWidth: "55%",
           }}
           data-testid="text-cta-heading"
         >
@@ -543,7 +570,7 @@ export default function CTADesigner() {
             fontSize: `${config.descriptionSize}px`,
             textAlign: "left",
             margin: `0 0 ${config.buttonSpacing}px 0`,
-            maxWidth: "45%",
+            maxWidth: "90%",
             lineHeight: 1.6,
           }}
           data-testid="text-cta-description"
@@ -1067,15 +1094,6 @@ export default function CTADesigner() {
                     </>
                   )}
 
-                  {config.layoutStyle === "background" && (
-                    <>
-                      <div className="space-y-3">
-                        <Label className="text-xs font-medium text-muted-foreground">Overlay Settings</Label>
-                        <SizeInput label="Overlay %" value={Math.round(config.overlayOpacity * 100)} onChange={(v) => updateConfig({ overlayOpacity: Math.min(100, Math.max(0, v)) / 100 })} suffix="%" testId="input-overlay-opacity" />
-                      </div>
-                      <div className="h-px bg-border" />
-                    </>
-                  )}
 
                   <div className="space-y-3">
                     <Label className="text-xs font-medium text-muted-foreground">Border Radius</Label>
