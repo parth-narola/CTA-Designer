@@ -358,19 +358,24 @@ export default function CTADesigner() {
         preserveAspectRatio="none"
       >
         <polygon
-          points="1920,400 2060,340 2160,619 2020,619"
+          points="1820,619 1960,380 2160,380 2020,619"
           fill="rgba(255,255,255,1)"
-          opacity={config.stripeOpacity * 0.4}
+          opacity={config.stripeOpacity * 0.3}
         />
         <polygon
-          points="2000,350 2100,310 2160,480 2080,520"
+          points="1900,619 2040,380 2160,380 2100,619"
+          fill="rgba(255,255,255,1)"
+          opacity={config.stripeOpacity * 0.2}
+        />
+        <polygon
+          points="1980,619 2120,380 2160,380 2160,619"
           fill="rgba(255,255,255,1)"
           opacity={config.stripeOpacity * 0.25}
         />
         <polygon
-          points="2060,200 2120,175 2160,300 2100,325"
+          points="2050,260 2130,130 2160,130 2160,260"
           fill="rgba(255,255,255,1)"
-          opacity={config.stripeOpacity * 0.2}
+          opacity={config.stripeOpacity * 0.15}
         />
       </svg>
 
