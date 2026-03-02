@@ -21,7 +21,7 @@ import { Download, Image, Type, Palette, Settings2, ChevronDown, Upload, X } fro
 import { Textarea } from "@/components/ui/textarea";
 import cornerAccentImg from "@assets/Vector_(1)_1772451456855.png";
 
-type LayoutStyle = "centered" | "split" | "background" | "darkSplit";
+type LayoutStyle = "centered" | "split" | "whiteSplit" | "bgImage" | "darkSplit";
 
 interface CTAConfig {
   layoutStyle: LayoutStyle;
@@ -61,11 +61,18 @@ const splitColorPresets = [
   { name: "Cream", bg: "#E8E4D5", stripe: "#ffffff", heading: "#000000", desc: "#000000" },
 ];
 
-const bgImageColorPresets = [
-  { name: "Light", bg: "#ffffff", stripe: "#ffffff", heading: "#000000", desc: "#000000" },
+const whiteSplitColorPresets = [
+  { name: "White", bg: "#ffffff", stripe: "#ffffff", heading: "#000000", desc: "#000000" },
   { name: "Warm", bg: "#f5f0eb", stripe: "#ffffff", heading: "#000000", desc: "#333333" },
   { name: "Cool", bg: "#eef2f5", stripe: "#ffffff", heading: "#1a1a2e", desc: "#333344" },
   { name: "Soft", bg: "#f0ebe5", stripe: "#ffffff", heading: "#2d2d2d", desc: "#444444" },
+];
+
+const bgImageColorPresets = [
+  { name: "Light", bg: "#ffffff", stripe: "#ffffff", heading: "#000000", desc: "#000000" },
+  { name: "Dark", bg: "#000000", stripe: "#ffffff", heading: "#ffffff", desc: "#e0e0e0" },
+  { name: "Warm", bg: "#f5f0eb", stripe: "#ffffff", heading: "#000000", desc: "#333333" },
+  { name: "Blue", bg: "#1a1a2e", stripe: "#ffffff", heading: "#ffffff", desc: "#d0d0e0" },
 ];
 
 const darkSplitColorPresets = [
@@ -179,9 +186,24 @@ export default function CTADesigner() {
         buttonSize: 22,
         buttonSpacing: 32,
       });
-    } else if (style === "background") {
+    } else if (style === "whiteSplit") {
       updateConfig({
-        layoutStyle: "background",
+        layoutStyle: "whiteSplit",
+        bgColor: "#ffffff",
+        heading: "Ready to Upgrade Your QA Process?",
+        description: "Discover how Alphabin helps teams ship faster with smarter test insights.",
+        headingColor: "#000000",
+        descriptionColor: "#000000",
+        buttonBgColor: "#000000",
+        buttonTextColor: "#ffffff",
+        headingSize: 52,
+        descriptionSize: 24,
+        buttonSize: 22,
+        buttonSpacing: 32,
+      });
+    } else if (style === "bgImage") {
+      updateConfig({
+        layoutStyle: "bgImage",
         bgColor: "#ffffff",
         heading: "Ready to Upgrade Your QA Process?",
         description: "Discover how Alphabin helps teams ship faster with smarter test insights.",
@@ -480,13 +502,13 @@ export default function CTADesigner() {
     </>
   );
 
-  const renderBackgroundLayout = () => (
+  const renderWhiteSplitLayout = () => (
     <>
       {config.uploadedImage ? (
         <div
           style={{
             position: "absolute",
-            left: 0,
+            right: 0,
             top: 0,
             width: "50%",
             height: "100%",
@@ -506,10 +528,10 @@ export default function CTADesigner() {
             style={{
               position: "absolute",
               top: 0,
-              right: "-1px",
+              left: "-1px",
               width: "60%",
               height: "100%",
-              background: `linear-gradient(to right, transparent 0%, ${config.bgColor} 100%)`,
+              background: `linear-gradient(to left, transparent 0%, ${config.bgColor} 100%)`,
             }}
           />
         </div>
@@ -517,7 +539,7 @@ export default function CTADesigner() {
         <div
           style={{
             position: "absolute",
-            left: 0,
+            right: 0,
             top: 0,
             width: "45%",
             height: "100%",
@@ -537,14 +559,14 @@ export default function CTADesigner() {
       <div
         style={{
           position: "absolute",
-          right: 0,
+          left: 0,
           top: 0,
           width: "55%",
           height: "100%",
           display: "flex",
           flexDirection: "column",
           justifyContent: "center",
-          padding: "60px 120px 60px 80px",
+          padding: "60px 80px 60px 120px",
           boxSizing: "border-box",
           zIndex: 1,
         }}
@@ -571,6 +593,99 @@ export default function CTADesigner() {
             textAlign: "left",
             margin: `0 0 ${config.buttonSpacing}px 0`,
             maxWidth: "90%",
+            lineHeight: 1.6,
+          }}
+          data-testid="text-cta-description"
+        >
+          {config.description}
+        </p>
+        <div>
+          <button
+            style={{
+              backgroundColor: config.buttonBgColor,
+              color: config.buttonTextColor,
+              fontSize: `${config.buttonSize}px`,
+              fontWeight: 500,
+              padding: "14px 40px",
+              border: "none",
+              cursor: "pointer",
+              fontFamily: config.fontFamily,
+              letterSpacing: "0.01em",
+              borderRadius: config.borderRadius > 0 ? `${Math.min(config.borderRadius, 8)}px` : "0px",
+            }}
+            data-testid="button-cta-action"
+          >
+            {config.buttonText}
+          </button>
+        </div>
+      </div>
+    </>
+  );
+
+  const renderBgImageLayout = () => (
+    <>
+      {config.uploadedImage && (
+        <img
+          src={config.uploadedImage}
+          alt="CTA Background"
+          style={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
+            objectFit: "cover",
+            objectPosition: "center center",
+          }}
+        />
+      )}
+      <div
+        style={{
+          position: "absolute",
+          top: 0,
+          left: 0,
+          width: "100%",
+          height: "100%",
+          backgroundColor: config.bgColor,
+          opacity: config.overlayOpacity,
+        }}
+      />
+      <div
+        style={{
+          position: "relative",
+          zIndex: 1,
+          width: "100%",
+          height: "100%",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          padding: "60px 160px",
+          boxSizing: "border-box",
+        }}
+      >
+        <h2
+          style={{
+            color: config.headingColor,
+            fontSize: `${config.headingSize}px`,
+            fontWeight: 800,
+            fontStyle: "normal",
+            textAlign: "left",
+            margin: "0 0 16px 0",
+            lineHeight: 1.2,
+            letterSpacing: "-0.02em",
+            maxWidth: "55%",
+          }}
+          data-testid="text-cta-heading"
+        >
+          {config.heading}
+        </h2>
+        <p
+          style={{
+            color: config.descriptionColor,
+            fontSize: `${config.descriptionSize}px`,
+            textAlign: "left",
+            margin: `0 0 ${config.buttonSpacing}px 0`,
+            maxWidth: "45%",
             lineHeight: 1.6,
           }}
           data-testid="text-cta-description"
@@ -737,19 +852,21 @@ export default function CTADesigner() {
   const getActivePresets = () => {
     switch (config.layoutStyle) {
       case "split": return splitColorPresets;
-      case "background": return bgImageColorPresets;
+      case "whiteSplit": return whiteSplitColorPresets;
+      case "bgImage": return bgImageColorPresets;
       case "darkSplit": return darkSplitColorPresets;
       default: return colorPresets;
     }
   };
 
   const activePresets = getActivePresets();
-  const showImageUpload = config.layoutStyle === "split" || config.layoutStyle === "background" || config.layoutStyle === "darkSplit";
+  const showImageUpload = config.layoutStyle !== "centered";
 
   const renderPreview = () => {
     switch (config.layoutStyle) {
       case "split": return renderSplitLayout();
-      case "background": return renderBackgroundLayout();
+      case "whiteSplit": return renderWhiteSplitLayout();
+      case "bgImage": return renderBgImageLayout();
       case "darkSplit": return renderDarkSplitLayout();
       default: return renderCenteredLayout();
     }
@@ -811,7 +928,7 @@ export default function CTADesigner() {
                   flexDirection: "column",
                   alignItems: config.layoutStyle === "centered" ? "center" : "flex-start",
                   justifyContent: "center",
-                  padding: config.layoutStyle === "centered" ? "80px 160px" : "0",
+                  padding: config.layoutStyle === "centered" ? "80px 160px" : config.layoutStyle === "bgImage" ? "0" : "0",
                   boxSizing: "border-box",
                 }}
                 data-testid="cta-preview"
@@ -846,7 +963,7 @@ export default function CTADesigner() {
                 <TabsContent value="content" className="p-4 space-y-5 mt-0">
                   <div className="space-y-2">
                     <Label className="text-xs font-medium text-muted-foreground">Layout Style</Label>
-                    <div className="grid grid-cols-2 gap-2">
+                    <div className="grid grid-cols-3 gap-2">
                       <button
                         onClick={() => switchLayout("centered")}
                         className={`flex flex-col items-center gap-1.5 p-3 rounded-md border-2 transition-all text-xs ${
@@ -885,13 +1002,32 @@ export default function CTADesigner() {
                         <span className="font-medium">Split Image</span>
                       </button>
                       <button
-                        onClick={() => switchLayout("background")}
+                        onClick={() => switchLayout("whiteSplit")}
                         className={`flex flex-col items-center gap-1.5 p-3 rounded-md border-2 transition-all text-xs ${
-                          config.layoutStyle === "background"
+                          config.layoutStyle === "whiteSplit"
                             ? "border-foreground bg-muted/50"
                             : "border-border hover:border-muted-foreground/50"
                         }`}
-                        data-testid="layout-background"
+                        data-testid="layout-white-split"
+                      >
+                        <div className="w-full h-10 rounded-sm bg-white border border-border/30 flex">
+                          <div className="flex-1 flex flex-col justify-center items-start pl-2 gap-0.5">
+                            <div className="w-6 h-1 bg-foreground/40 rounded-full" />
+                            <div className="w-4 h-0.5 bg-foreground/25 rounded-full" />
+                            <div className="w-3 h-1.5 bg-foreground/30 rounded-sm mt-0.5" />
+                          </div>
+                          <div className="w-[40%] h-full bg-foreground/10 rounded-r-sm" />
+                        </div>
+                        <span className="font-medium">White Split</span>
+                      </button>
+                      <button
+                        onClick={() => switchLayout("bgImage")}
+                        className={`flex flex-col items-center gap-1.5 p-3 rounded-md border-2 transition-all text-xs ${
+                          config.layoutStyle === "bgImage"
+                            ? "border-foreground bg-muted/50"
+                            : "border-border hover:border-muted-foreground/50"
+                        }`}
+                        data-testid="layout-bg-image"
                       >
                         <div className="w-full h-10 rounded-sm bg-muted relative overflow-hidden">
                           <div className="absolute inset-0 bg-foreground/10" />
@@ -1089,6 +1225,16 @@ export default function CTADesigner() {
                           <SizeInput label="Angle" value={config.stripeAngle} onChange={(v) => updateConfig({ stripeAngle: v })} suffix="°" testId="input-stripe-angle" />
                           <SizeInput label="Width" value={config.stripeWidth} onChange={(v) => updateConfig({ stripeWidth: v })} suffix="px" testId="input-stripe-width" />
                         </div>
+                      </div>
+                      <div className="h-px bg-border" />
+                    </>
+                  )}
+
+                  {config.layoutStyle === "bgImage" && (
+                    <>
+                      <div className="space-y-3">
+                        <Label className="text-xs font-medium text-muted-foreground">Overlay Settings</Label>
+                        <SizeInput label="Overlay %" value={Math.round(config.overlayOpacity * 100)} onChange={(v) => updateConfig({ overlayOpacity: Math.min(100, Math.max(0, v)) / 100 })} suffix="%" testId="input-overlay-opacity" />
                       </div>
                       <div className="h-px bg-border" />
                     </>
