@@ -10,8 +10,10 @@ A web-based CTA (Call-to-Action) banner designer tool. Users can create beautifu
 
 ## Key Features
 - CTA preview at 2160x619px with responsive scaling
-- Two layout styles: Centered (diagonal stripes) and Split Image (image left, text right)
-- Split Image layout: upload custom image, rounded cutout, corner geometric accents
+- Four layout styles: Centered (diagonal stripes), Split Image (image left, text right), BG Image (full background image with overlay), Dark Split (dark theme with image fade)
+- Split Image layout: upload custom image, corner geometric accents
+- BG Image layout: full-width background image with color overlay, text on left
+- Dark Split layout: dark background, image on left with gradient fade, white text, corner accents
 - Diagonal stripe background pattern (SVG-based) for centered layout
 - Configuration panel with tabs: Content, Colors, Style
 - 4 color presets per layout style + custom color pickers
