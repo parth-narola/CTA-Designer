@@ -321,8 +321,8 @@ export default function CTADesigner() {
             style={{
               width: "100%",
               height: "100%",
-              objectFit: "contain",
-              objectPosition: "center bottom",
+              objectFit: "cover",
+              objectPosition: "left center",
               borderBottomRightRadius: "120px",
             }}
           />
