@@ -358,24 +358,35 @@ export default function CTADesigner() {
         preserveAspectRatio="none"
       >
         <polygon
-          points="1820,619 1960,380 2160,380 2020,619"
+          points="1750,560 1920,370 2120,370 1950,560"
           fill="rgba(255,255,255,1)"
+          opacity={config.stripeOpacity * 0.6}
+        />
+        <polygon
+          points="1850,619 2020,430 2160,430 2050,619"
+          fill="rgba(255,255,255,1)"
+          opacity={config.stripeOpacity * 0.6}
+        />
+        <polygon
+          points="1950,619 2120,430 2160,430 2160,560"
+          fill="none"
+          stroke="rgba(255,255,255,1)"
+          strokeWidth="2"
+          opacity={config.stripeOpacity * 0.4}
+        />
+        <polygon
+          points="2020,619 2160,470 2160,530 2080,619"
+          fill="none"
+          stroke="rgba(255,255,255,1)"
+          strokeWidth="2"
+          opacity={config.stripeOpacity * 0.4}
+        />
+        <polygon
+          points="2060,350 2130,260 2160,260 2160,350"
+          fill="none"
+          stroke="rgba(255,255,255,1)"
+          strokeWidth="2"
           opacity={config.stripeOpacity * 0.3}
-        />
-        <polygon
-          points="1900,619 2040,380 2160,380 2100,619"
-          fill="rgba(255,255,255,1)"
-          opacity={config.stripeOpacity * 0.2}
-        />
-        <polygon
-          points="1980,619 2120,380 2160,380 2160,619"
-          fill="rgba(255,255,255,1)"
-          opacity={config.stripeOpacity * 0.25}
-        />
-        <polygon
-          points="2050,260 2130,130 2160,130 2160,260"
-          fill="rgba(255,255,255,1)"
-          opacity={config.stripeOpacity * 0.15}
         />
       </svg>
 
