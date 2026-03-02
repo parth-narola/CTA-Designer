@@ -45,6 +45,7 @@ interface CTAConfig {
   buttonSpacing: number;
   uploadedImage: string | null;
   overlayOpacity: number;
+  contentAlign: "left" | "center" | "right";
 }
 
 const colorPresets = [
@@ -119,6 +120,7 @@ const defaultConfig: CTAConfig = {
   buttonSpacing: 24,
   uploadedImage: null,
   overlayOpacity: 0.75,
+  contentAlign: "left",
 };
 
 export default function CTADesigner() {
@@ -622,98 +624,105 @@ export default function CTADesigner() {
     </>
   );
 
-  const renderBgImageLayout = () => (
-    <>
-      {config.uploadedImage && (
-        <img
-          src={config.uploadedImage}
-          alt="CTA Background"
+  const renderBgImageLayout = () => {
+    const align = config.contentAlign;
+    const alignItems = align === "center" ? "center" : align === "right" ? "flex-end" : "flex-start";
+    const textAlign = align as "left" | "center" | "right";
+
+    return (
+      <>
+        {config.uploadedImage && (
+          <img
+            src={config.uploadedImage}
+            alt="CTA Background"
+            style={{
+              position: "absolute",
+              top: 0,
+              left: 0,
+              width: "100%",
+              height: "100%",
+              objectFit: "cover",
+              objectPosition: "center center",
+            }}
+          />
+        )}
+        <div
           style={{
             position: "absolute",
             top: 0,
             left: 0,
             width: "100%",
             height: "100%",
-            objectFit: "cover",
-            objectPosition: "center center",
+            backgroundColor: config.bgColor,
+            opacity: config.overlayOpacity,
           }}
         />
-      )}
-      <div
-        style={{
-          position: "absolute",
-          top: 0,
-          left: 0,
-          width: "100%",
-          height: "100%",
-          backgroundColor: config.bgColor,
-          opacity: config.overlayOpacity,
-        }}
-      />
-      <div
-        style={{
-          position: "relative",
-          zIndex: 1,
-          width: "100%",
-          height: "100%",
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          padding: "60px 160px",
-          boxSizing: "border-box",
-        }}
-      >
-        <h2
+        <div
           style={{
-            color: config.headingColor,
-            fontSize: `${config.headingSize}px`,
-            fontWeight: 800,
-            fontStyle: "normal",
-            textAlign: "left",
-            margin: "0 0 16px 0",
-            lineHeight: 1.2,
-            letterSpacing: "-0.02em",
-            maxWidth: "55%",
+            position: "relative",
+            zIndex: 1,
+            width: "100%",
+            height: "100%",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems,
+            padding: "60px 160px",
+            boxSizing: "border-box",
           }}
-          data-testid="text-cta-heading"
         >
-          {config.heading}
-        </h2>
-        <p
-          style={{
-            color: config.descriptionColor,
-            fontSize: `${config.descriptionSize}px`,
-            textAlign: "left",
-            margin: `0 0 ${config.buttonSpacing}px 0`,
-            maxWidth: "45%",
-            lineHeight: 1.6,
-          }}
-          data-testid="text-cta-description"
-        >
-          {config.description}
-        </p>
-        <div>
-          <button
+          <h2
             style={{
-              backgroundColor: config.buttonBgColor,
-              color: config.buttonTextColor,
-              fontSize: `${config.buttonSize}px`,
-              fontWeight: 500,
-              padding: "14px 40px",
-              border: "none",
-              cursor: "pointer",
-              fontFamily: config.fontFamily,
-              letterSpacing: "0.01em",
-              borderRadius: config.borderRadius > 0 ? `${Math.min(config.borderRadius, 8)}px` : "0px",
+              color: config.headingColor,
+              fontSize: `${config.headingSize}px`,
+              fontWeight: 800,
+              fontStyle: "normal",
+              textAlign,
+              margin: "0 0 16px 0",
+              lineHeight: 1.2,
+              letterSpacing: "-0.02em",
+              maxWidth: "55%",
             }}
-            data-testid="button-cta-action"
+            data-testid="text-cta-heading"
           >
-            {config.buttonText}
-          </button>
+            {config.heading}
+          </h2>
+          <p
+            style={{
+              color: config.descriptionColor,
+              fontSize: `${config.descriptionSize}px`,
+              textAlign,
+              margin: `0 0 ${config.buttonSpacing}px 0`,
+              maxWidth: "45%",
+              lineHeight: 1.6,
+            }}
+            data-testid="text-cta-description"
+          >
+            {config.description}
+          </p>
+          <div>
+            <button
+              style={{
+                backgroundColor: config.buttonBgColor,
+                color: config.buttonTextColor,
+                fontSize: `${config.buttonSize}px`,
+                fontWeight: 500,
+                padding: "14px 40px",
+                border: "none",
+                cursor: "pointer",
+                fontFamily: config.fontFamily,
+                letterSpacing: "0.01em",
+                borderRadius: config.borderRadius > 0 ? `${Math.min(config.borderRadius, 8)}px` : "0px",
+              }}
+              data-testid="button-cta-action"
+            >
+              {config.buttonText}
+            </button>
+          </div>
         </div>
-      </div>
-    </>
-  );
+      </>
+    );
+  };
 
   const renderDarkSplitLayout = () => (
     <>
@@ -1100,6 +1109,31 @@ export default function CTADesigner() {
                             <span className="text-xs text-muted-foreground">Click to upload</span>
                           </button>
                         )}
+                      </div>
+                      <div className="h-px bg-border" />
+                    </>
+                  )}
+
+                  {config.layoutStyle === "bgImage" && (
+                    <>
+                      <div className="space-y-2">
+                        <Label className="text-xs font-medium text-muted-foreground">Content Alignment</Label>
+                        <div className="grid grid-cols-3 gap-2">
+                          {(["left", "center", "right"] as const).map((a) => (
+                            <button
+                              key={a}
+                              onClick={() => updateConfig({ contentAlign: a })}
+                              className={`py-2 px-3 rounded-md border-2 text-xs font-medium capitalize transition-all ${
+                                config.contentAlign === a
+                                  ? "border-foreground bg-muted/50"
+                                  : "border-border hover:border-muted-foreground/50"
+                              }`}
+                              data-testid={`align-${a}`}
+                            >
+                              {a}
+                            </button>
+                          ))}
+                        </div>
                       </div>
                       <div className="h-px bg-border" />
                     </>
