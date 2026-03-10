@@ -98,6 +98,13 @@ const fontOptions = [
   { value: "'Merriweather', serif", label: "Merriweather" },
 ];
 
+const defaultImages = [
+  "/call-center-laptop-man-wave-video-customer-service-support-help-desk-office-happy-hello-sales-agent-webinar-communication-consulting-telemarketing-online-conference_590464-219957-transformed%202.png",
+  "/image%207.png",
+  "/unsplash_npxXWgQ33ZQ%20(2).png",
+  "/unsplash_npxXWgQ33ZQ-1.png",
+];
+
 const defaultConfig: CTAConfig = {
   layoutStyle: "centered",
   heading: "Improve Test Coverage Without Chasing Numbers",
@@ -995,8 +1002,8 @@ export default function CTADesigner() {
                       <button
                         onClick={() => switchLayout("centered")}
                         className={`flex flex-col items-center gap-1.5 p-3 rounded-md border-2 transition-all text-xs ${config.layoutStyle === "centered"
-                            ? "border-foreground bg-muted/50"
-                            : "border-border hover:border-muted-foreground/50"
+                          ? "border-foreground bg-muted/50"
+                          : "border-border hover:border-muted-foreground/50"
                           }`}
                         data-testid="layout-centered"
                       >
@@ -1012,8 +1019,8 @@ export default function CTADesigner() {
                       <button
                         onClick={() => switchLayout("split")}
                         className={`flex flex-col items-center gap-1.5 p-3 rounded-md border-2 transition-all text-xs ${config.layoutStyle === "split"
-                            ? "border-foreground bg-muted/50"
-                            : "border-border hover:border-muted-foreground/50"
+                          ? "border-foreground bg-muted/50"
+                          : "border-border hover:border-muted-foreground/50"
                           }`}
                         data-testid="layout-split"
                       >
@@ -1030,8 +1037,8 @@ export default function CTADesigner() {
                       <button
                         onClick={() => switchLayout("whiteSplit")}
                         className={`flex flex-col items-center gap-1.5 p-3 rounded-md border-2 transition-all text-xs ${config.layoutStyle === "whiteSplit"
-                            ? "border-foreground bg-muted/50"
-                            : "border-border hover:border-muted-foreground/50"
+                          ? "border-foreground bg-muted/50"
+                          : "border-border hover:border-muted-foreground/50"
                           }`}
                         data-testid="layout-white-split"
                       >
@@ -1048,8 +1055,8 @@ export default function CTADesigner() {
                       <button
                         onClick={() => switchLayout("bgImage")}
                         className={`flex flex-col items-center gap-1.5 p-3 rounded-md border-2 transition-all text-xs ${config.layoutStyle === "bgImage"
-                            ? "border-foreground bg-muted/50"
-                            : "border-border hover:border-muted-foreground/50"
+                          ? "border-foreground bg-muted/50"
+                          : "border-border hover:border-muted-foreground/50"
                           }`}
                         data-testid="layout-bg-image"
                       >
@@ -1066,8 +1073,8 @@ export default function CTADesigner() {
                       <button
                         onClick={() => switchLayout("darkSplit")}
                         className={`flex flex-col items-center gap-1.5 p-3 rounded-md border-2 transition-all text-xs ${config.layoutStyle === "darkSplit"
-                            ? "border-foreground bg-muted/50"
-                            : "border-border hover:border-muted-foreground/50"
+                          ? "border-foreground bg-muted/50"
+                          : "border-border hover:border-muted-foreground/50"
                           }`}
                         data-testid="layout-dark-split"
                       >
@@ -1123,6 +1130,25 @@ export default function CTADesigner() {
                             <span className="text-xs text-muted-foreground">Click to upload</span>
                           </button>
                         )}
+
+                        <div className="pt-2">
+                          <Label className="text-xs font-medium text-muted-foreground mb-2 block">Default Assets</Label>
+                          <div className="grid grid-cols-2 gap-2">
+                            {defaultImages.map((img, idx) => (
+                              <button
+                                key={idx}
+                                onClick={() => updateConfig({ uploadedImage: img })}
+                                className={`relative overflow-hidden rounded-md border-2 transition-all h-20 ${config.uploadedImage === img
+                                  ? "border-foreground"
+                                  : "border-transparent hover:border-muted-foreground/50"
+                                  }`}
+                              >
+                                <img src={img} alt={`Default asset ${idx + 1}`} className="w-full h-full object-cover" />
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+
                       </div>
                       <div className="h-px bg-border" />
                     </>
@@ -1138,8 +1164,8 @@ export default function CTADesigner() {
                               key={a}
                               onClick={() => updateConfig({ contentAlign: a })}
                               className={`py-2 px-3 rounded-md border-2 text-xs font-medium capitalize transition-all ${config.contentAlign === a
-                                  ? "border-foreground bg-muted/50"
-                                  : "border-border hover:border-muted-foreground/50"
+                                ? "border-foreground bg-muted/50"
+                                : "border-border hover:border-muted-foreground/50"
                                 }`}
                               data-testid={`align-${a}`}
                             >
