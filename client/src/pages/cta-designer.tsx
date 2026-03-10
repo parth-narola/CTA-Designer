@@ -124,12 +124,31 @@ const defaultConfig: CTAConfig = {
 };
 
 export default function CTADesigner() {
-  const [config, setConfig] = useState<CTAConfig>(defaultConfig);
+  const [config, setConfig] = useState<CTAConfig>(() => {
+    try {
+      const saved = localStorage.getItem("cta-config");
+      if (saved) {
+        return JSON.parse(saved);
+      }
+    } catch (e) {
+      console.error("Error loading config from local storage", e);
+    }
+    return defaultConfig;
+  });
+
   const [isExporting, setIsExporting] = useState(false);
   const ctaRef = useRef<HTMLDivElement>(null);
   const wrapperRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [scale, setScale] = useState(1);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem("cta-config", JSON.stringify(config));
+    } catch (e) {
+      console.error("Error saving config to local storage", e);
+    }
+  }, [config]);
 
   useEffect(() => {
     const updateScale = () => {
@@ -921,29 +940,29 @@ export default function CTADesigner() {
             </div>
             <div ref={wrapperRef} className="flex items-center justify-center bg-muted/30 rounded-lg p-6 border border-border/50">
               <div style={{ width: `${2160 * scale}px`, height: `${619 * scale}px` }}>
-              <div
-                ref={ctaRef}
-                style={{
-                  transform: `scale(${scale})`,
-                  transformOrigin: "top left",
-                  width: "2160px",
-                  height: "619px",
-                  backgroundColor: config.bgColor,
-                  fontFamily: config.fontFamily,
-                  borderRadius: `${config.borderRadius}px`,
-                  position: "relative",
-                  overflow: "hidden",
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: config.layoutStyle === "centered" ? "center" : "flex-start",
-                  justifyContent: "center",
-                  padding: config.layoutStyle === "centered" ? "80px 160px" : config.layoutStyle === "bgImage" ? "0" : "0",
-                  boxSizing: "border-box",
-                }}
-                data-testid="cta-preview"
-              >
-                {renderPreview()}
-              </div>
+                <div
+                  ref={ctaRef}
+                  style={{
+                    transform: `scale(${scale})`,
+                    transformOrigin: "top left",
+                    width: "2160px",
+                    height: "619px",
+                    backgroundColor: config.bgColor,
+                    fontFamily: config.fontFamily,
+                    borderRadius: `${config.borderRadius}px`,
+                    position: "relative",
+                    overflow: "hidden",
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: config.layoutStyle === "centered" ? "center" : "flex-start",
+                    justifyContent: "center",
+                    padding: config.layoutStyle === "centered" ? "80px 160px" : config.layoutStyle === "bgImage" ? "0" : "0",
+                    boxSizing: "border-box",
+                  }}
+                  data-testid="cta-preview"
+                >
+                  {renderPreview()}
+                </div>
               </div>
             </div>
           </div>
@@ -975,11 +994,10 @@ export default function CTADesigner() {
                     <div className="grid grid-cols-3 gap-2">
                       <button
                         onClick={() => switchLayout("centered")}
-                        className={`flex flex-col items-center gap-1.5 p-3 rounded-md border-2 transition-all text-xs ${
-                          config.layoutStyle === "centered"
+                        className={`flex flex-col items-center gap-1.5 p-3 rounded-md border-2 transition-all text-xs ${config.layoutStyle === "centered"
                             ? "border-foreground bg-muted/50"
                             : "border-border hover:border-muted-foreground/50"
-                        }`}
+                          }`}
                         data-testid="layout-centered"
                       >
                         <div className="w-full h-10 rounded-sm bg-muted flex items-center justify-center">
@@ -993,11 +1011,10 @@ export default function CTADesigner() {
                       </button>
                       <button
                         onClick={() => switchLayout("split")}
-                        className={`flex flex-col items-center gap-1.5 p-3 rounded-md border-2 transition-all text-xs ${
-                          config.layoutStyle === "split"
+                        className={`flex flex-col items-center gap-1.5 p-3 rounded-md border-2 transition-all text-xs ${config.layoutStyle === "split"
                             ? "border-foreground bg-muted/50"
                             : "border-border hover:border-muted-foreground/50"
-                        }`}
+                          }`}
                         data-testid="layout-split"
                       >
                         <div className="w-full h-10 rounded-sm bg-muted flex">
@@ -1012,11 +1029,10 @@ export default function CTADesigner() {
                       </button>
                       <button
                         onClick={() => switchLayout("whiteSplit")}
-                        className={`flex flex-col items-center gap-1.5 p-3 rounded-md border-2 transition-all text-xs ${
-                          config.layoutStyle === "whiteSplit"
+                        className={`flex flex-col items-center gap-1.5 p-3 rounded-md border-2 transition-all text-xs ${config.layoutStyle === "whiteSplit"
                             ? "border-foreground bg-muted/50"
                             : "border-border hover:border-muted-foreground/50"
-                        }`}
+                          }`}
                         data-testid="layout-white-split"
                       >
                         <div className="w-full h-10 rounded-sm bg-white border border-border/30 flex">
@@ -1031,11 +1047,10 @@ export default function CTADesigner() {
                       </button>
                       <button
                         onClick={() => switchLayout("bgImage")}
-                        className={`flex flex-col items-center gap-1.5 p-3 rounded-md border-2 transition-all text-xs ${
-                          config.layoutStyle === "bgImage"
+                        className={`flex flex-col items-center gap-1.5 p-3 rounded-md border-2 transition-all text-xs ${config.layoutStyle === "bgImage"
                             ? "border-foreground bg-muted/50"
                             : "border-border hover:border-muted-foreground/50"
-                        }`}
+                          }`}
                         data-testid="layout-bg-image"
                       >
                         <div className="w-full h-10 rounded-sm bg-muted relative overflow-hidden">
@@ -1050,11 +1065,10 @@ export default function CTADesigner() {
                       </button>
                       <button
                         onClick={() => switchLayout("darkSplit")}
-                        className={`flex flex-col items-center gap-1.5 p-3 rounded-md border-2 transition-all text-xs ${
-                          config.layoutStyle === "darkSplit"
+                        className={`flex flex-col items-center gap-1.5 p-3 rounded-md border-2 transition-all text-xs ${config.layoutStyle === "darkSplit"
                             ? "border-foreground bg-muted/50"
                             : "border-border hover:border-muted-foreground/50"
-                        }`}
+                          }`}
                         data-testid="layout-dark-split"
                       >
                         <div className="w-full h-10 rounded-sm bg-neutral-800 flex">
@@ -1123,11 +1137,10 @@ export default function CTADesigner() {
                             <button
                               key={a}
                               onClick={() => updateConfig({ contentAlign: a })}
-                              className={`py-2 px-3 rounded-md border-2 text-xs font-medium capitalize transition-all ${
-                                config.contentAlign === a
+                              className={`py-2 px-3 rounded-md border-2 text-xs font-medium capitalize transition-all ${config.contentAlign === a
                                   ? "border-foreground bg-muted/50"
                                   : "border-border hover:border-muted-foreground/50"
-                              }`}
+                                }`}
                               data-testid={`align-${a}`}
                             >
                               {a}
